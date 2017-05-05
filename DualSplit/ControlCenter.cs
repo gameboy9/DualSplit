@@ -64,22 +64,22 @@ namespace DualSplit
 
         private void splitPOneA_Click(object sender, EventArgs e)
         {
-            main.adjustSplit(true, true);
+            main.adjustSplit(true, true, false);
         }
 
         private void splitMOneA_Click(object sender, EventArgs e)
         {
-            main.adjustSplit(true, false);
+            main.adjustSplit(true, false, false);
         }
 
         private void splitPOneB_Click(object sender, EventArgs e)
         {
-            main.adjustSplit(false, true);
+            main.adjustSplit(false, true, false);
         }
 
         private void splitMOneB_Click(object sender, EventArgs e)
         {
-            main.adjustSplit(false, false);
+            main.adjustSplit(false, false, false);
         }
 
         private void btnResetClocks_Click(object sender, EventArgs e)
@@ -101,6 +101,26 @@ namespace DualSplit
         private void txtCommentary_Leave(object sender, EventArgs e)
         {
             main.lblCommentary.Text = "Commentary:  " + txtCommentary.Text;
+        }
+
+        private void splitPTenA_Click(object sender, EventArgs e)
+        {
+            main.adjustSplit(true, true, true);
+        }
+
+        private void splitMTenA_Click(object sender, EventArgs e)
+        {
+            main.adjustSplit(true, false, true);
+        }
+
+        private void splitPTenB_Click(object sender, EventArgs e)
+        {
+            main.adjustSplit(false, true, true);
+        }
+
+        private void splitMTenB_Click(object sender, EventArgs e)
+        {
+            main.adjustSplit(false, false, true);
         }
     }
 }

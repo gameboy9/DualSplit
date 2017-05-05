@@ -212,12 +212,12 @@ namespace DualSplit
             if (firstPlayer) timer1.Enabled = true; else timer2.Enabled = true;
         }
 
-        public void adjustSplit(bool firstPlayer, bool plus)
+        public void adjustSplit(bool firstPlayer, bool plus, bool ten)
         {
             int player = (firstPlayer ? 0 : 1);
             int split = (firstPlayer ? splitsDoneA - 1 : splitsDoneB - 1);
 
-            splitSpan[player, split] = splitSpan[player, split].Add(new TimeSpan(0, 0, (plus ? 1 : -1)));
+            splitSpan[player, split] = splitSpan[player, split].Add(new TimeSpan(0, 0, (plus ? (ten ? 10 : 1) : (ten ? -10 : -1))));
             TimeSpan tsA = splitSpan[player, split];
             splitTimes[player, split].Text = Math.Floor(tsA.TotalHours) + ":" + Math.Floor((double)tsA.Minutes).ToString("00") + ":" + Math.Floor((double)tsA.Seconds).ToString("00");
 

@@ -50,6 +50,10 @@
             this.txtPlayerA = new System.Windows.Forms.TextBox();
             this.txtCommentary = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.splitMTenB = new System.Windows.Forms.Button();
+            this.splitPTenB = new System.Windows.Forms.Button();
+            this.splitMTenA = new System.Windows.Forms.Button();
+            this.splitPTenA = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // startClocks
@@ -184,7 +188,7 @@
             // 
             // splitMOneB
             // 
-            this.splitMOneB.Location = new System.Drawing.Point(473, 165);
+            this.splitMOneB.Location = new System.Drawing.Point(473, 194);
             this.splitMOneB.Name = "splitMOneB";
             this.splitMOneB.Size = new System.Drawing.Size(47, 23);
             this.splitMOneB.TabIndex = 36;
@@ -194,7 +198,7 @@
             // 
             // splitPOneB
             // 
-            this.splitPOneB.Location = new System.Drawing.Point(420, 165);
+            this.splitPOneB.Location = new System.Drawing.Point(420, 194);
             this.splitPOneB.Name = "splitPOneB";
             this.splitPOneB.Size = new System.Drawing.Size(47, 23);
             this.splitPOneB.TabIndex = 35;
@@ -204,7 +208,7 @@
             // 
             // splitMOneA
             // 
-            this.splitMOneA.Location = new System.Drawing.Point(67, 165);
+            this.splitMOneA.Location = new System.Drawing.Point(67, 194);
             this.splitMOneA.Name = "splitMOneA";
             this.splitMOneA.Size = new System.Drawing.Size(47, 23);
             this.splitMOneA.TabIndex = 38;
@@ -214,7 +218,7 @@
             // 
             // splitPOneA
             // 
-            this.splitPOneA.Location = new System.Drawing.Point(14, 165);
+            this.splitPOneA.Location = new System.Drawing.Point(14, 194);
             this.splitPOneA.Name = "splitPOneA";
             this.splitPOneA.Size = new System.Drawing.Size(47, 23);
             this.splitPOneA.TabIndex = 37;
@@ -267,12 +271,56 @@
             this.label1.TabIndex = 43;
             this.label1.Text = "Commentary:";
             // 
+            // splitMTenB
+            // 
+            this.splitMTenB.Location = new System.Drawing.Point(473, 165);
+            this.splitMTenB.Name = "splitMTenB";
+            this.splitMTenB.Size = new System.Drawing.Size(47, 23);
+            this.splitMTenB.TabIndex = 45;
+            this.splitMTenB.Text = "-10 s";
+            this.splitMTenB.UseVisualStyleBackColor = true;
+            this.splitMTenB.Click += new System.EventHandler(this.splitMTenB_Click);
+            // 
+            // splitPTenB
+            // 
+            this.splitPTenB.Location = new System.Drawing.Point(420, 163);
+            this.splitPTenB.Name = "splitPTenB";
+            this.splitPTenB.Size = new System.Drawing.Size(47, 23);
+            this.splitPTenB.TabIndex = 44;
+            this.splitPTenB.Text = "+10 s";
+            this.splitPTenB.UseVisualStyleBackColor = true;
+            this.splitPTenB.Click += new System.EventHandler(this.splitPTenB_Click);
+            // 
+            // splitMTenA
+            // 
+            this.splitMTenA.Location = new System.Drawing.Point(67, 165);
+            this.splitMTenA.Name = "splitMTenA";
+            this.splitMTenA.Size = new System.Drawing.Size(47, 23);
+            this.splitMTenA.TabIndex = 47;
+            this.splitMTenA.Text = "-10 s";
+            this.splitMTenA.UseVisualStyleBackColor = true;
+            this.splitMTenA.Click += new System.EventHandler(this.splitMTenA_Click);
+            // 
+            // splitPTenA
+            // 
+            this.splitPTenA.Location = new System.Drawing.Point(15, 165);
+            this.splitPTenA.Name = "splitPTenA";
+            this.splitPTenA.Size = new System.Drawing.Size(47, 23);
+            this.splitPTenA.TabIndex = 46;
+            this.splitPTenA.Text = "+10 s";
+            this.splitPTenA.UseVisualStyleBackColor = true;
+            this.splitPTenA.Click += new System.EventHandler(this.splitPTenA_Click);
+            // 
             // ControlCenter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(534, 225);
             this.ControlBox = false;
+            this.Controls.Add(this.splitMTenA);
+            this.Controls.Add(this.splitPTenA);
+            this.Controls.Add(this.splitMTenB);
+            this.Controls.Add(this.splitPTenB);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtCommentary);
             this.Controls.Add(this.txtPlayerA);
@@ -330,5 +378,9 @@
         private System.Windows.Forms.TextBox txtPlayerA;
         private System.Windows.Forms.TextBox txtCommentary;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button splitMTenB;
+        private System.Windows.Forms.Button splitPTenB;
+        private System.Windows.Forms.Button splitMTenA;
+        private System.Windows.Forms.Button splitPTenA;
     }
 }
