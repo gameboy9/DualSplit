@@ -180,9 +180,9 @@ namespace DualSplit
                     }
                     else
                     {
-                        diffTimes[0, split].Text = "+" + Math.Floor(diff.TotalMinutes) + ":" + Math.Floor((double)diff.Seconds).ToString("00");
+                        diffTimes[0, split].Text = "+" + Math.Floor(diff.TotalMinutes).ToString("00") + ":" + Math.Floor((double)diff.Seconds).ToString("00");
                         diffTimes[0, split].ForeColor = Color.LightCoral;
-                        diffTimes[1, split].Text = "-" + Math.Floor(diff.TotalMinutes) + ":" + Math.Floor((double)diff.Seconds).ToString("00");
+                        diffTimes[1, split].Text = "-" + Math.Floor(diff.TotalMinutes).ToString("00") + ":" + Math.Floor((double)diff.Seconds).ToString("00");
                         diffTimes[1, split].ForeColor = Color.LawnGreen;
                     }
                 }
