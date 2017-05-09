@@ -78,7 +78,7 @@ namespace DualSplit
             for (int i = 0; i < splits; i++)
             {
                 splitTexts[i] = new Label();
-                splitTexts[i].Text = (i == 0 ? "Mtn" : i == 1 ? "Harp" : i == 2 ? "Golem" : i == 3 ? "Dragons" : i == 4 ? "Armor" : i == 5 ? "Char" : i == 6 ? "DL" : "The End");
+                splitTexts[i].Text = (i == 0 ? "Mtn" : i == 1 ? "Grave" : i == 2 ? "Golem" : i == 3 ? "Dragons" : i == 4 ? "Armor" : i == 5 ? "Char" : i == 6 ? "DL" : "The End");
                 splitTexts[i].Left = 860;
                 splitTexts[i].Top = 25 + (i * 35);
                 splitTexts[i].AutoSize = true;

@@ -54,6 +54,14 @@
             this.splitPTenB = new System.Windows.Forms.Button();
             this.splitMTenA = new System.Windows.Forms.Button();
             this.splitPTenA = new System.Windows.Forms.Button();
+            this.cmdStartServer = new System.Windows.Forms.Button();
+            this.cmdConnect = new System.Windows.Forms.Button();
+            this.txtIP = new System.Windows.Forms.TextBox();
+            this.txtPort = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cmdTest = new System.Windows.Forms.Button();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // startClocks
@@ -311,12 +319,90 @@
             this.splitPTenA.UseVisualStyleBackColor = true;
             this.splitPTenA.Click += new System.EventHandler(this.splitPTenA_Click);
             // 
+            // cmdStartServer
+            // 
+            this.cmdStartServer.Location = new System.Drawing.Point(584, 206);
+            this.cmdStartServer.Name = "cmdStartServer";
+            this.cmdStartServer.Size = new System.Drawing.Size(87, 23);
+            this.cmdStartServer.TabIndex = 48;
+            this.cmdStartServer.Text = "Start Server";
+            this.cmdStartServer.UseVisualStyleBackColor = true;
+            this.cmdStartServer.Click += new System.EventHandler(this.cmdStartServer_Click);
+            // 
+            // cmdConnect
+            // 
+            this.cmdConnect.Location = new System.Drawing.Point(696, 206);
+            this.cmdConnect.Name = "cmdConnect";
+            this.cmdConnect.Size = new System.Drawing.Size(87, 23);
+            this.cmdConnect.TabIndex = 49;
+            this.cmdConnect.Text = "Connect";
+            this.cmdConnect.UseVisualStyleBackColor = true;
+            this.cmdConnect.Click += new System.EventHandler(this.cmdConnect_Click);
+            // 
+            // txtIP
+            // 
+            this.txtIP.Location = new System.Drawing.Point(648, 16);
+            this.txtIP.Name = "txtIP";
+            this.txtIP.Size = new System.Drawing.Size(135, 20);
+            this.txtIP.TabIndex = 50;
+            // 
+            // txtPort
+            // 
+            this.txtPort.Location = new System.Drawing.Point(648, 41);
+            this.txtPort.Name = "txtPort";
+            this.txtPort.Size = new System.Drawing.Size(67, 20);
+            this.txtPort.TabIndex = 51;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(581, 19);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(61, 13);
+            this.label2.TabIndex = 52;
+            this.label2.Text = "IP Address:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(581, 44);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(29, 13);
+            this.label3.TabIndex = 53;
+            this.label3.Text = "Port:";
+            // 
+            // cmdTest
+            // 
+            this.cmdTest.Location = new System.Drawing.Point(799, 206);
+            this.cmdTest.Name = "cmdTest";
+            this.cmdTest.Size = new System.Drawing.Size(87, 23);
+            this.cmdTest.TabIndex = 54;
+            this.cmdTest.Text = "Test";
+            this.cmdTest.UseVisualStyleBackColor = true;
+            this.cmdTest.Click += new System.EventHandler(this.cmdTest_Click);
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(841, 16);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(120, 56);
+            this.listBox1.TabIndex = 55;
+            // 
             // ControlCenter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(534, 225);
+            this.ClientSize = new System.Drawing.Size(998, 248);
             this.ControlBox = false;
+            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.cmdTest);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.txtPort);
+            this.Controls.Add(this.txtIP);
+            this.Controls.Add(this.cmdConnect);
+            this.Controls.Add(this.cmdStartServer);
             this.Controls.Add(this.splitMTenA);
             this.Controls.Add(this.splitPTenA);
             this.Controls.Add(this.splitMTenB);
@@ -382,5 +468,13 @@
         private System.Windows.Forms.Button splitPTenB;
         private System.Windows.Forms.Button splitMTenA;
         private System.Windows.Forms.Button splitPTenA;
+        private System.Windows.Forms.Button cmdStartServer;
+        private System.Windows.Forms.Button cmdConnect;
+        private System.Windows.Forms.TextBox txtIP;
+        private System.Windows.Forms.TextBox txtPort;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button cmdTest;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
