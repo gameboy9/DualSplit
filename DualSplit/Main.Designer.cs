@@ -87,13 +87,12 @@
             // 
             // lblPlayerB
             // 
-            this.lblPlayerB.AutoSize = true;
             this.lblPlayerB.Font = new System.Drawing.Font("Dragon Quest", 18F);
             this.lblPlayerB.ForeColor = System.Drawing.Color.White;
-            this.lblPlayerB.Location = new System.Drawing.Point(1704, 25);
+            this.lblPlayerB.Location = new System.Drawing.Point(1456, 25);
             this.lblPlayerB.Margin = new System.Windows.Forms.Padding(7, 0, 7, 0);
             this.lblPlayerB.Name = "lblPlayerB";
-            this.lblPlayerB.Size = new System.Drawing.Size(181, 30);
+            this.lblPlayerB.Size = new System.Drawing.Size(429, 30);
             this.lblPlayerB.TabIndex = 3;
             this.lblPlayerB.Text = "PlayerB";
             this.lblPlayerB.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -114,7 +113,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Black;
+            this.BackColor = System.Drawing.Color.Blue;
             this.ClientSize = new System.Drawing.Size(1904, 382);
             this.Controls.Add(this.lblCommentary);
             this.Controls.Add(this.lblPlayerB);

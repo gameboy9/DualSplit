@@ -91,7 +91,11 @@ namespace DualSplit
 
             cc.setupForm(this);
             cc.Show();
-            cc.Focus();
+            cc.BringToFront();
+            this.Left = 200;
+            this.Top = 200;
+            cc.Left = 50;
+            cc.Top = 50;
         }
 
         public void startClocks()
