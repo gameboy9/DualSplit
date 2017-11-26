@@ -20,20 +20,23 @@ namespace DualSplit
     {
         Label[,] splitTimes;
         Label[,] diffTimes;
-        Label[] splitTexts;
+        Label[,] splitTexts;
 
-        Stopwatch clockA = new Stopwatch();
-        Stopwatch clockB = new Stopwatch();
+        Stopwatch[] clocks = { new Stopwatch(), new Stopwatch(), new Stopwatch(), new Stopwatch() };
 
-        TimeSpan adjustmentA = new TimeSpan();
-        TimeSpan adjustmentB = new TimeSpan();
+        TimeSpan[] adjustment = { new TimeSpan(), new TimeSpan(), new TimeSpan(), new TimeSpan() };
 
         TimeSpan[,] splitSpan;
 
         int splits = 0;
+        int splitLimit = 0;
+        int players = 0;
 
-        int splitsDoneA = 0;
-        int splitsDoneB = 0;
+        int splitYStart = 0;
+        int splitY2Start = 0;
+        int splitYGap = 0;
+
+        int[] splitsDone = { 0, 0, 0, 0 };
 
         private Socket m_sock;                      // Server connection
         private byte[] m_byBuff = new byte[256];    // Recieved data buffer
@@ -53,7 +56,7 @@ namespace DualSplit
         {
             try
             {
-                using (TextReader reader = File.OpenText("lastDQ12.txt"))
+                using (TextReader reader = File.OpenText("dualSettings.txt"))
                 {
                     txtIP.Text = reader.ReadLine();
                     txtPort.Text = reader.ReadLine();
@@ -66,184 +69,158 @@ namespace DualSplit
                 // ignore error
             }
 
-            //this.AutoScaleMode = AutoScaleMode.None;
             loadGame();
-
-            //this.Height = 70 + (splits * 30) + 60;
 
             this.Left = 200;
             this.Top = 200;
-
-            try
-            {
-                using (TextReader reader = File.OpenText("dualSettings.txt"))
-                {
-                    txtIP.Text = reader.ReadLine();
-                    txtPort.Text = reader.ReadLine();
-                }
-            }
-            catch
-            {
-                // ignore error
-            }
         }
 
         public void startClocks()
         {
-            clockA.Start();
-            clockB.Start();
+            for (int i = 0; i < players; i++)
+                clocks[i].Start();
             timer1.Enabled = true;
-            timer2.Enabled = true;
         }
 
-        public void adjustTime(bool stopWatchA, bool subtract)
+        public void adjustTime(int player, bool subtract)
         {
-            {
-                if (subtract)
-                    if (stopWatchA)
-                        adjustmentA = adjustmentA.Subtract(new TimeSpan(0, 0, 0, 1, 0));
-                    else
-                        adjustmentB = adjustmentB.Subtract(new TimeSpan(0, 0, 0, 1, 0));
-                else
-                    if (stopWatchA)
-                    adjustmentA = adjustmentA.Add(new TimeSpan(0, 0, 0, 1, 0));
-                else
-                    adjustmentB = adjustmentB.Add(new TimeSpan(0, 0, 0, 1, 0));
-            }
+            if (subtract)
+                adjustment[player] = adjustment[player].Subtract(new TimeSpan(0, 0, 0, 1, 0));
+            else
+                adjustment[player] = adjustment[player].Add(new TimeSpan(0, 0, 0, 1, 0));
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            TimeSpan tsA = clockA.Elapsed + adjustmentA;
-            lblTimerA.Text = Math.Floor(tsA.TotalHours) + ":" + Math.Floor((double)tsA.Minutes).ToString("00") + ":" + Math.Floor((double)tsA.Seconds).ToString("00") + "." + tsA.Milliseconds / 100;
+            for (int i = 0; i < players; i++)
+            {
+                if (splitsDone[i] >= splits) continue;
+                TimeSpan ts = clocks[i].Elapsed + adjustment[i];
+                string timeElapsed = Math.Floor(ts.TotalHours) + ":" + Math.Floor((double)ts.Minutes).ToString("00") + ":" + Math.Floor((double)ts.Seconds).ToString("00") + "." + ts.Milliseconds / 100;
+                if (i == 0) lblTimerA.Text = timeElapsed; else if (i == 1) lblTimerB.Text = timeElapsed; else if (i == 2) lblTimerC.Text = timeElapsed; else lblTimerD.Text = timeElapsed;
+            }
         }
 
-        private void timer2_Tick(object sender, EventArgs e)
+        public void split(int player, byte[] aryInfo = null)
         {
-            TimeSpan tsB = clockB.Elapsed + adjustmentB;
-            lblTimerB.Text = Math.Floor(tsB.TotalHours) + ":" + Math.Floor((double)tsB.Minutes).ToString("00") + ":" + Math.Floor((double)tsB.Seconds).ToString("00") + "." + tsB.Milliseconds / 100;
-        }
+            if (splitsDone[player] >= splits) return;
+            int split = splitsDone[player];
 
-        public void split(bool firstPlayer, byte[] aryInfo = null)
-        {
-            if ((firstPlayer && splitsDoneA == splits) || (!firstPlayer && splitsDoneB == splits)) return;
-            int split = (firstPlayer ? splitsDoneA : splitsDoneB);
-
-            TimeSpan ts = (firstPlayer ? clockA.Elapsed + adjustmentA : clockB.Elapsed + adjustmentB);
+            TimeSpan ts = clocks[player].Elapsed + adjustment[player];
             if (aryInfo != null)
                 ts = new TimeSpan(aryInfo[1], aryInfo[2], aryInfo[3]);
 
-            splitSpan[firstPlayer ? 0 : 1, split] = ts;
+            splitSpan[player, split] = ts;
 
-            splitTimes[firstPlayer ? 0 : 1, split].Text = Math.Floor(ts.TotalHours) + ":" + Math.Floor((double)ts.Minutes).ToString("00") + ":" + Math.Floor((double)ts.Seconds).ToString("00");
+            splitTimes[player, split].Text = Math.Floor(ts.TotalHours) + ":" + Math.Floor((double)ts.Minutes).ToString("00") + ":" + Math.Floor((double)ts.Seconds).ToString("00");
 
-            calcDiffs(firstPlayer ? splitsDoneA : splitsDoneB);
+            calcDiffs(player, splitsDone[player]);
 
-            if (firstPlayer) splitsDoneA++; else splitsDoneB++;
-            if (splitsDoneA == splits) timer1.Enabled = false;
-            if (splitsDoneB == splits) timer2.Enabled = false;
+            splitsDone[player]++;
         }
 
-        public void calcDiffs(int split)
+        public void calcDiffs(int player, int split)
         {
-            if (splitSpan[0, split].TotalSeconds != 0 && splitSpan[1, split].TotalSeconds != 0)
+            int playerA = (player == 0 || player == 1 ? 0 : 2);
+            int playerB = (player == 0 || player == 1 ? 1 : 3);
+
+            if (splitSpan[playerA, split].TotalSeconds != 0 && splitSpan[playerB, split].TotalSeconds != 0)
             {
-                TimeSpan diff = splitSpan[0, split].Subtract(splitSpan[1, split]);
+                TimeSpan diff = splitSpan[playerA, split].Subtract(splitSpan[playerB, split]);
                 if (diff.TotalSeconds < 0)
                 {
-                    diff = splitSpan[1, split].Subtract(splitSpan[0, split]);
+                    diff = splitSpan[playerB, split].Subtract(splitSpan[playerA, split]);
                     if (diff.TotalSeconds < 60)
                     {
-                        diffTimes[0, split].Text = "-" + Math.Floor((double)diff.Seconds).ToString("00") + "." + diff.Milliseconds / 100;
-                        diffTimes[0, split].ForeColor = Color.LawnGreen;
-                        diffTimes[1, split].Text = "+" + Math.Floor((double)diff.Seconds).ToString("00") + "." + diff.Milliseconds / 100;
-                        diffTimes[1, split].ForeColor = Color.LightCoral;
+                        diffTimes[playerA, split].Text = "-" + Math.Floor((double)diff.Seconds).ToString("00") + "." + diff.Milliseconds / 100;
+                        diffTimes[playerA, split].ForeColor = Color.LawnGreen;
+                        diffTimes[playerB, split].Text = "+" + Math.Floor((double)diff.Seconds).ToString("00") + "." + diff.Milliseconds / 100;
+                        diffTimes[playerB, split].ForeColor = Color.LightCoral;
                     }
                     else
                     {
-                        diffTimes[0, split].Text = "-" + Math.Floor(diff.TotalMinutes).ToString("00") + ":" + Math.Floor((double)diff.Seconds).ToString("00");
-                        diffTimes[0, split].ForeColor = Color.LawnGreen;
-                        diffTimes[1, split].Text = "+" + Math.Floor(diff.TotalMinutes).ToString("00") + ":" + Math.Floor((double)diff.Seconds).ToString("00");
-                        diffTimes[1, split].ForeColor = Color.LightCoral;
+                        diffTimes[playerA, split].Text = "-" + Math.Floor(diff.TotalMinutes).ToString("00") + ":" + Math.Floor((double)diff.Seconds).ToString("00");
+                        diffTimes[playerA, split].ForeColor = Color.LawnGreen;
+                        diffTimes[playerB, split].Text = "+" + Math.Floor(diff.TotalMinutes).ToString("00") + ":" + Math.Floor((double)diff.Seconds).ToString("00");
+                        diffTimes[playerB, split].ForeColor = Color.LightCoral;
                     }
                 }
                 else
                 {
                     if (diff.TotalSeconds < 60)
                     {
-                        diffTimes[0, split].Text = "+" + Math.Floor((double)diff.Seconds).ToString("00") + "." + diff.Milliseconds / 100;
-                        diffTimes[0, split].ForeColor = Color.LightCoral;
-                        diffTimes[1, split].Text = "-" + Math.Floor((double)diff.Seconds).ToString("00") + "." + diff.Milliseconds / 100;
-                        diffTimes[1, split].ForeColor = Color.LawnGreen;
+                        diffTimes[playerA, split].Text = "+" + Math.Floor((double)diff.Seconds).ToString("00") + "." + diff.Milliseconds / 100;
+                        diffTimes[playerA, split].ForeColor = Color.LightCoral;
+                        diffTimes[playerB, split].Text = "-" + Math.Floor((double)diff.Seconds).ToString("00") + "." + diff.Milliseconds / 100;
+                        diffTimes[playerB, split].ForeColor = Color.LawnGreen;
                     }
                     else
                     {
-                        diffTimes[0, split].Text = "+" + Math.Floor(diff.TotalMinutes).ToString("00") + ":" + Math.Floor((double)diff.Seconds).ToString("00");
-                        diffTimes[0, split].ForeColor = Color.LightCoral;
-                        diffTimes[1, split].Text = "-" + Math.Floor(diff.TotalMinutes).ToString("00") + ":" + Math.Floor((double)diff.Seconds).ToString("00");
-                        diffTimes[1, split].ForeColor = Color.LawnGreen;
+                        diffTimes[playerA, split].Text = "+" + Math.Floor(diff.TotalMinutes).ToString("00") + ":" + Math.Floor((double)diff.Seconds).ToString("00");
+                        diffTimes[playerA, split].ForeColor = Color.LightCoral;
+                        diffTimes[playerB, split].Text = "-" + Math.Floor(diff.TotalMinutes).ToString("00") + ":" + Math.Floor((double)diff.Seconds).ToString("00");
+                        diffTimes[playerB, split].ForeColor = Color.LawnGreen;
                     }
                 }
             }
             else
             {
-                diffTimes[0, split].Text = "";
-                diffTimes[1, split].Text = "";
+                diffTimes[playerA, split].Text = "";
+                diffTimes[playerB, split].Text = "";
             }
         }
 
-        public void reverseSplit(bool firstPlayer, byte[] aryInfo = null)
+        public void reverseSplit(int player, byte[] aryInfo = null)
         {
-            if ((firstPlayer && splitsDoneA == 0) || (!firstPlayer && splitsDoneB == 0)) return;
+            if (splitsDone[player] == 0) return;
 
-            int player = (firstPlayer ? 0 : 1);
-            if (firstPlayer) splitsDoneA--; else splitsDoneB--;
-            int split = (firstPlayer ? splitsDoneA : splitsDoneB);
+            splitsDone[player]--;
+            int split = splitsDone[player];
 
             splitSpan[player, split] = new TimeSpan();
 
-            diffTimes[0, split].Text = "";
-            diffTimes[1, split].Text = "";
+            if (player == 0 || player == 1)
+            {
+                diffTimes[0, split].Text = "";
+                diffTimes[1, split].Text = "";
+            } else
+            {
+                diffTimes[2, split].Text = "";
+                diffTimes[3, split].Text = "";
+            }
 
             splitTimes[player, split].Text = "";
-
-            if (firstPlayer) timer1.Enabled = true; else timer2.Enabled = true;
         }
 
-        public void adjustSplit(bool firstPlayer, bool plus, bool ten, byte[] aryInfo = null)
+        public void adjustSplit(int player, bool plus, bool ten, byte[] aryInfo = null)
         {
-            int player = (firstPlayer ? 0 : 1);
-            int split = (firstPlayer ? splitsDoneA - 1 : splitsDoneB - 1);
+            int split = splitsDone[player] - 1;
+            if (split < 0) return;
 
             splitSpan[player, split] = splitSpan[player, split].Add(new TimeSpan(0, 0, (plus ? (ten ? 10 : 1) : (ten ? -10 : -1))));
             TimeSpan tsA = splitSpan[player, split];
             splitTimes[player, split].Text = Math.Floor(tsA.TotalHours) + ":" + Math.Floor((double)tsA.Minutes).ToString("00") + ":" + Math.Floor((double)tsA.Seconds).ToString("00");
 
-            calcDiffs(split);
+            calcDiffs(player, split);
         }
 
         public void resetClocks()
         {
             timer1.Enabled = false;
-            timer2.Enabled = false;
+            lblTimerA.Text = lblTimerB.Text = lblTimerC.Text = lblTimerD.Text = "0:00:00.0";
 
-            adjustmentA = new TimeSpan();
-            adjustmentB = new TimeSpan();
-            lblTimerA.Text = lblTimerB.Text = "0:00:00.0";
-
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
+            {
                 for (int j = 0; j < splits; j++)
                 {
                     splitSpan[i, j] = new TimeSpan();
                     splitTimes[i, j].Text = "";
                     diffTimes[i, j].Text = "";
                 }
-
-            clockA.Reset();
-            clockB.Reset();
-
-            splitsDoneA = 0;
-            splitsDoneB = 0;
+                adjustment[i] = new TimeSpan();
+                clocks[i].Reset();
+                splitsDone[i] = 0;
+            }
         }
 
         private void startClocks_Click(object sender, EventArgs e)
@@ -256,78 +233,31 @@ namespace DualSplit
 
         private void adjustClocks(object sender, EventArgs e)
         {
-            Button actualSender = (Button)sender;
+            string senderName = ((Button)sender).Name;
             if (client == true)
             {
-                sendBytes(new byte[] { (byte)(actualSender.Name == "pOneA" ? 0x30 : actualSender.Name == "mOneA" ? 0x31 : actualSender.Name == "pOneB" ? 0x32 : 0x33) });
+                sendBytes(new byte[] { (byte)((senderName.Contains("A") ? 0x50 : senderName.Contains("B") ? 0x52 : senderName.Contains("C") ? 0x54 : 0x56) + (senderName.Contains("m") ? 1 : 0)) });
             } else
             {
-                adjustTime(actualSender.Name == "pOneA" || actualSender.Name == "mOneA", actualSender.Name == "mOneA" || actualSender.Name == "mOneB");
+                adjustTime(senderName.Contains("A") ? 0 : senderName.Contains("B") ? 1 : senderName.Contains("C") ? 2 : 3, senderName.Contains("m"));
             }
         }
 
-        private void splitA_Click(object sender, EventArgs e)
+        private void btnSplit(object sender, EventArgs e)
         {
-            if (client == true)
-                sendBytes(new byte[] { 0x03 });
-            else
-                split(true);
-        }
+            string senderName = ((Button)sender).Name;
 
-        private void splitB_Click(object sender, EventArgs e)
-        {
             if (client == true)
-                sendBytes(new byte[] { 0x04 });
+                sendBytes(new byte[] { (byte)((senderName.Contains("A") ? 0 : senderName.Contains("B") ? 1 : senderName.Contains("C") ? 2 : 3) + (senderName.Contains("split") ? 3 : 7)) });
             else
-                split(false);
-        }
+            {
+                if (senderName.Contains("split"))
+                    split(senderName.Contains("A") ? 0 : senderName.Contains("B") ? 1 : senderName.Contains("C") ? 2 : 3);
+                else
+                    reverseSplit(senderName.Contains("A") ? 0 : senderName.Contains("B") ? 1 : senderName.Contains("C") ? 2 : 3);
 
-        private void reverseA_Click(object sender, EventArgs e)
-        {
-            if (client == true)
-                sendBytes(new byte[] { 0x05 });
-            else
-                reverseSplit(true);
-        }
-
-        private void reverseB_Click(object sender, EventArgs e)
-        {
-            if (client == true)
-                sendBytes(new byte[] { 0x06 });
-            else
-                reverseSplit(false);
-        }
-
-        private void splitPOneA_Click(object sender, EventArgs e)
-        {
-            if (client == true)
-                sendBytes(new byte[] { 0x11 });
-            else
-                adjustSplit(true, true, false);
-        }
-
-        private void splitMOneA_Click(object sender, EventArgs e)
-        {
-            if (client == true)
-                sendBytes(new byte[] { 0x10 });
-            else
-                adjustSplit(true, false, false);
-        }
-
-        private void splitPOneB_Click(object sender, EventArgs e)
-        {
-            if (client == true)
-                sendBytes(new byte[] { 0x21 });
-            else
-                adjustSplit(false, true, false);
-        }
-
-        private void splitMOneB_Click(object sender, EventArgs e)
-        {
-            if (client == true)
-                sendBytes(new byte[] { 0x20 });
-            else
-                adjustSplit(false, false, false);
+                limitSplits();
+            }
         }
 
         private void btnResetClocks_Click(object sender, EventArgs e)
@@ -354,36 +284,14 @@ namespace DualSplit
             lblCommentary.Text = "Commentary:  " + txtCommentary.Text;
         }
 
-        private void splitPTenA_Click(object sender, EventArgs e)
+        private void btnSplitAdjust(object sender, EventArgs e)
         {
-            if (client == true)
-                sendBytes(new byte[] { 0x13 });
-            else
-                adjustSplit(true, true, true);
-        }
+            string senderName = ((Button)sender).Name;
 
-        private void splitMTenA_Click(object sender, EventArgs e)
-        {
             if (client == true)
-                sendBytes(new byte[] { 0x12 });
+                sendBytes(new byte[] { (byte)((senderName.Contains("A") ? 0x10 : senderName.Contains("B") ? 0x20 : senderName.Contains("C") ? 0x30 : 0x40) + (senderName.Contains("p") ? 1 : 0) + (senderName.Contains("Ten") ? 2 : 0)) });
             else
-                adjustSplit(true, false, true);
-        }
-
-        private void splitPTenB_Click(object sender, EventArgs e)
-        {
-            if (client == true)
-                sendBytes(new byte[] { 0x23 });
-            else
-                adjustSplit(false, true, true);
-        }
-
-        private void splitMTenB_Click(object sender, EventArgs e)
-        {
-            if (client == true)
-                sendBytes(new byte[] { 0x22 });
-            else
-                adjustSplit(false, false, true);
+                adjustSplit(senderName.Contains("A") ? 0 : senderName.Contains("B") ? 1 : senderName.Contains("C") ? 2 : 3, senderName.Contains("P"), senderName.Contains("Ten"));
         }
 
         private void cmdStartServer_Click(object sender, EventArgs e)
@@ -504,48 +412,22 @@ namespace DualSplit
                 listBox1.Items.Insert(0, "Server Data Get:  " + aryRet[0]);
                 cleanListBox();
 
-                if (server == true)
-                {
-                    if (aryRet[0] == 0x01) startClocks();
-                    if (aryRet[0] == 0x02) resetClocks();
-                    if (aryRet[0] == 0x03) split(true);
-                    if (aryRet[0] == 0x04) split(false);
-                    if (aryRet[0] == 0x05) reverseSplit(true);
-                    if (aryRet[0] == 0x06) reverseSplit(false);
-                    if (aryRet[0] == 0x10) adjustSplit(true, false, false);
-                    if (aryRet[0] == 0x11) adjustSplit(true, true, false);
-                    if (aryRet[0] == 0x12) adjustSplit(true, false, true);
-                    if (aryRet[0] == 0x13) adjustSplit(true, true, true);
-                    if (aryRet[0] == 0x20) adjustSplit(false, false, false);
-                    if (aryRet[0] == 0x21) adjustSplit(false, true, false);
-                    if (aryRet[0] == 0x22) adjustSplit(false, false, true);
-                    if (aryRet[0] == 0x23) adjustSplit(false, true, true);
-                    if (aryRet[0] == 0x30) adjustTime(true, false);
-                    if (aryRet[0] == 0x31) adjustTime(true, true);
-                    if (aryRet[0] == 0x32) adjustTime(false, false);
-                    if (aryRet[0] == 0x33) adjustTime(false, true);
-                }
-                else
-                {
-                    if (aryRet[0] == 0x01) startClocks();
-                    if (aryRet[0] == 0x02) resetClocks();
-                    if (aryRet[0] == 0x03) split(true);
-                    if (aryRet[0] == 0x04) split(false);
-                    if (aryRet[0] == 0x05) reverseSplit(true);
-                    if (aryRet[0] == 0x06) reverseSplit(false);
-                    if (aryRet[0] == 0x10) adjustSplit(true, false, false);
-                    if (aryRet[0] == 0x11) adjustSplit(true, true, false);
-                    if (aryRet[0] == 0x12) adjustSplit(true, false, true);
-                    if (aryRet[0] == 0x13) adjustSplit(true, true, true);
-                    if (aryRet[0] == 0x20) adjustSplit(false, false, false);
-                    if (aryRet[0] == 0x21) adjustSplit(false, true, false);
-                    if (aryRet[0] == 0x22) adjustSplit(false, false, true);
-                    if (aryRet[0] == 0x23) adjustSplit(false, true, true);
-                    if (aryRet[0] == 0x30) adjustTime(true, false);
-                    if (aryRet[0] == 0x31) adjustTime(true, true);
-                    if (aryRet[0] == 0x32) adjustTime(false, false);
-                    if (aryRet[0] == 0x33) adjustTime(false, true);
-                }
+                if (aryRet[0] == 0x01) startClocks();
+                else if (aryRet[0] == 0x02) resetClocks();
+                else if (aryRet[0] == 0x03) split(0);
+                else if (aryRet[0] == 0x04) split(1);
+                else if (aryRet[0] == 0x05) split(2);
+                else if (aryRet[0] == 0x06) split(3);
+                else if (aryRet[0] == 0x07) reverseSplit(0);
+                else if (aryRet[0] == 0x08) reverseSplit(1);
+                else if (aryRet[0] == 0x09) reverseSplit(2);
+                else if (aryRet[0] == 0x0a) reverseSplit(3);
+                else if (aryRet[0] >= 0x10 && aryRet[0] < 0x50)
+                    adjustSplit((aryRet[0] - 16) / 16, aryRet[0] % 4 == 1 || aryRet[0] % 4 == 3, aryRet[0] % 4 >= 2);
+                else if (aryRet[0] >= 0x50)
+                    adjustTime((aryRet[0] - 80) / 2, (aryRet[0] - 80) % 2 == 1);
+
+                if (aryRet[0] >= 0x03 && aryRet[0] <= 0x0a) limitSplits();
             }));
 
             //Send the recieved data to all clients(including sender for echo)
@@ -635,12 +517,18 @@ namespace DualSplit
             {
                 AsyncCallback recieveData = new AsyncCallback(OnRecievedData);
                 sock.BeginReceive(m_byBuff, 0, m_byBuff.Length, SocketFlags.None, recieveData, sock);
-                listBox1.Items.Insert(0, "Connection successful");
+                //this.BeginInvoke(new MethodInvoker(delegate
+                //{
+                //    listBox1.Items.Insert(0, "Connection successful");
+                //}));
                 client = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, "Setup Recieve Callback failed!");
+                this.BeginInvoke(new MethodInvoker(delegate
+                {
+                    MessageBox.Show(this, ex.Message, "Setup Recieve Callback failed!");
+                }));
             }
         }
 
@@ -673,55 +561,23 @@ namespace DualSplit
                         listBox1.Items.Insert(0, "Client Data Get:  " + m_byBuff[0]);
                         cleanListBox();
 
-                        if (server == true)
-                        {
-                            if (m_byBuff[0] == 0x01) startClocks();
-                            if (m_byBuff[0] == 0x02) resetClocks();
-                            if (m_byBuff[0] == 0x03) split(true);
-                            if (m_byBuff[0] == 0x04) split(false);
-                            if (m_byBuff[0] == 0x05) reverseSplit(true);
-                            if (m_byBuff[0] == 0x06) reverseSplit(false);
-                            if (m_byBuff[0] == 0x10) adjustSplit(true, false, false);
-                            if (m_byBuff[0] == 0x11) adjustSplit(true, true, false);
-                            if (m_byBuff[0] == 0x12) adjustSplit(true, false, true);
-                            if (m_byBuff[0] == 0x13) adjustSplit(true, true, true);
-                            if (m_byBuff[0] == 0x20) adjustSplit(false, false, false);
-                            if (m_byBuff[0] == 0x21) adjustSplit(false, true, false);
-                            if (m_byBuff[0] == 0x22) adjustSplit(false, false, true);
-                            if (m_byBuff[0] == 0x23) adjustSplit(false, true, true);
-                            if (m_byBuff[0] == 0x30) adjustTime(true, false);
-                            if (m_byBuff[0] == 0x30) adjustTime(true, false);
-                            if (m_byBuff[0] == 0x30) adjustTime(true, false);
-                            if (m_byBuff[0] == 0x31) adjustTime(true, true);
-                            if (m_byBuff[0] == 0x32) adjustTime(false, false);
-                            if (m_byBuff[0] == 0x33) adjustTime(false, true);
-                        }
-                        else
-                        {
-                            if (m_byBuff[0] == 0x01) startClocks();
-                            if (m_byBuff[0] == 0x02) resetClocks();
-                            if (m_byBuff[0] == 0x03) split(true);
-                            if (m_byBuff[0] == 0x04) split(false);
-                            if (m_byBuff[0] == 0x05) reverseSplit(true);
-                            if (m_byBuff[0] == 0x06) reverseSplit(false);
-                            if (m_byBuff[0] == 0x10) adjustSplit(true, false, false);
-                            if (m_byBuff[0] == 0x11) adjustSplit(true, true, false);
-                            if (m_byBuff[0] == 0x12) adjustSplit(true, false, true);
-                            if (m_byBuff[0] == 0x13) adjustSplit(true, true, true);
-                            if (m_byBuff[0] == 0x20) adjustSplit(false, false, false);
-                            if (m_byBuff[0] == 0x21) adjustSplit(false, true, false);
-                            if (m_byBuff[0] == 0x22) adjustSplit(false, false, true);
-                            if (m_byBuff[0] == 0x23) adjustSplit(false, true, true);
-                            if (m_byBuff[0] == 0x30) adjustTime(true, false);
-                            if (m_byBuff[0] == 0x31) adjustTime(true, true);
-                            if (m_byBuff[0] == 0x32) adjustTime(false, false);
-                            if (m_byBuff[0] == 0x33) adjustTime(false, true);
-                        }
-                    }));
+                        if (m_byBuff[0] == 0x01) startClocks();
+                        else if (m_byBuff[0] == 0x02) resetClocks();
+                        else if (m_byBuff[0] == 0x03) split(0);
+                        else if (m_byBuff[0] == 0x04) split(1);
+                        else if (m_byBuff[0] == 0x05) split(2);
+                        else if (m_byBuff[0] == 0x06) split(3);
+                        else if (m_byBuff[0] == 0x07) reverseSplit(0);
+                        else if (m_byBuff[0] == 0x08) reverseSplit(1);
+                        else if (m_byBuff[0] == 0x09) reverseSplit(2);
+                        else if (m_byBuff[0] == 0x0a) reverseSplit(3);
+                        else if (m_byBuff[0] >= 0x10 && m_byBuff[0] < 0x50)
+                            adjustSplit((m_byBuff[0] - 16) / 16, m_byBuff[0] % 4 == 1 || m_byBuff[0] % 4 == 3, m_byBuff[0] % 4 >= 2);
+                        else if (m_byBuff[0] >= 0x50)
+                            adjustTime((m_byBuff[0] - 80) / 2, (m_byBuff[0] - 80) % 2 == 1);
 
-                    //// WARNING : The following line is NOT thread safe. Invoke is
-                    //// m_lbRecievedData.Items.Add( sRecieved );
-                    //Invoke(m_AddMessage, new string[] { sRecieved });
+                        if (m_byBuff[0] >= 0x03 && m_byBuff[0] <= 0x0a) limitSplits();
+                    }));
 
                     // If the connection is still usable restablish the callback
                     SetupRecieveCallback(sock);
@@ -792,7 +648,7 @@ namespace DualSplit
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-            openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.InitialDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             openFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
             openFileDialog1.FilterIndex = 2;
             openFileDialog1.RestoreDirectory = true;
@@ -806,48 +662,102 @@ namespace DualSplit
 
         private void loadGame()
         {
-            XDocument gameXML = XDocument.Load(gameFile);
-            XElement game = gameXML.Root.Element("game");
-            lblGameName.Text = "Game:  " + gameXML.Element("game").Attribute("name").Value;
-            string gameFont = gameXML.Element("game").Attribute("Font").Value;
-
             for (int i = 0; i < splits; i++)
             {
-                Controls.Remove(splitTexts[i]);
-                for (int j = 0; j < 2; j++)
+                for (int j = 0; j < players; j++)
                 {
                     Controls.Remove(splitTimes[j, i]);
                     Controls.Remove(diffTimes[j, i]);
                 }
+                for (int j = 0; j < players / 2; j++)
+                {
+                    Controls.Remove(splitTexts[j, i]);
+                }
             }
 
+            XDocument gameXML = XDocument.Load(gameFile);
+            XElement game = gameXML.Root.Element("game");
+            lblGameName.Text = "Game:  " + gameXML.Element("game").Attribute("name").Value;
+            players = Convert.ToInt32(gameXML.Element("game").Attribute("players").Value);
+            if (players != 4) players = 2;
+            // Make players 3&4 invisible if not 4 players.
+            txtPlayerC.Visible = (players == 4);
+            txtPlayerD.Visible = (players == 4);
+            pOneC.Visible = (players == 4);
+            pOneD.Visible = (players == 4);
+            mOneC.Visible = (players == 4);
+            mOneD.Visible = (players == 4);
+            splitC.Visible = (players == 4);
+            splitD.Visible = (players == 4);
+            reverseC.Visible = (players == 4);
+            reverseD.Visible = (players == 4);
+            splitMOneC.Visible = (players == 4);
+            splitMOneD.Visible = (players == 4);
+            splitPOneC.Visible = (players == 4);
+            splitPOneD.Visible = (players == 4);
+            splitMTenC.Visible = (players == 4);
+            splitMTenD.Visible = (players == 4);
+            splitPTenC.Visible = (players == 4);
+            splitPTenD.Visible = (players == 4);
+            lblTimerC.Visible = (players == 4);
+            lblTimerD.Visible = (players == 4);
+
+            string gameFont = gameXML.Element("game").Attribute("Font").Value;
+
             splits = gameXML.Descendants("split").Count();
+            if (gameXML.Descendants("splits").First().Attribute("limit") != null)
+                splitLimit = Convert.ToInt32(gameXML.Descendants("splits").First().Attribute("limit").Value);
+            else 
+                splitLimit = splits;
+
+            if (splitLimit <= 0 || splitLimit >= splits) splitLimit = splits;
 
             if (gameXML.Descendants("playerA").First().Attribute("visible").Value == "false")
                 lblPlayerA.Visible = false;
             else
             {
-
+                lblPlayerA.Visible = true;
             }
             if (gameXML.Descendants("playerB").First().Attribute("visible").Value == "false")
                 lblPlayerB.Visible = false;
             else
             {
-
+                lblPlayerB.Visible = true;
+            }
+            if (players < 3 || gameXML.Descendants("playerC").First().Attribute("visible").Value == "false")
+                lblPlayerC.Visible = false;
+            else
+            {
+                lblPlayerC.Visible = true;
+            }
+            if (players < 4 || gameXML.Descendants("playerD").First().Attribute("visible").Value == "false")
+                lblPlayerD.Visible = false;
+            else
+            {
+                lblPlayerD.Visible = true;
             }
             if (gameXML.Descendants("mic").First().Attribute("visible").Value == "false")
                 lblCommentary.Visible = false;
             else
             {
-
+                lblCommentary.Visible = true;
             }
 
             lblTimerA.Font = new Font(gameFont, Convert.ToInt32(gameXML.Descendants("clockA").First().Attribute("fontSize").Value));
-            lblTimerB.Font = new Font(gameFont, Convert.ToInt32(gameXML.Descendants("clockA").First().Attribute("fontSize").Value));
+            lblTimerB.Font = new Font(gameFont, Convert.ToInt32(gameXML.Descendants("clockB").First().Attribute("fontSize").Value));
             lblTimerA.Left = Convert.ToInt32(gameXML.Descendants("clockA").First().Attribute("locX").Value);
             lblTimerB.Left = Convert.ToInt32(gameXML.Descendants("clockB").First().Attribute("locX").Value);
             lblTimerA.Top = Convert.ToInt32(gameXML.Descendants("clockA").First().Attribute("locY").Value);
             lblTimerB.Top = Convert.ToInt32(gameXML.Descendants("clockB").First().Attribute("locY").Value);
+            if (players == 4)
+            {
+                lblTimerC.Font = new Font(gameFont, Convert.ToInt32(gameXML.Descendants("clockC").First().Attribute("fontSize").Value));
+                lblTimerD.Font = new Font(gameFont, Convert.ToInt32(gameXML.Descendants("clockD").First().Attribute("fontSize").Value));
+                lblTimerC.Left = Convert.ToInt32(gameXML.Descendants("clockC").First().Attribute("locX").Value);
+                lblTimerD.Left = Convert.ToInt32(gameXML.Descendants("clockD").First().Attribute("locX").Value);
+                lblTimerC.Top = Convert.ToInt32(gameXML.Descendants("clockC").First().Attribute("locY").Value);
+                lblTimerD.Top = Convert.ToInt32(gameXML.Descendants("clockD").First().Attribute("locY").Value);
+            }
 
             Font timeFont = new Font(gameFont, Convert.ToInt32(gameXML.Descendants("times").First().Attribute("fontSize").Value));
             int timeALeft = Convert.ToInt32(gameXML.Descendants("times").First().Attribute("aLocX").Value);
@@ -861,15 +771,16 @@ namespace DualSplit
             int titleLeft = Convert.ToInt32(gameXML.Descendants("title").First().Attribute("aLocX").Value);
 
             Font splitFont = new Font(gameFont, Convert.ToInt32(gameXML.Descendants("splits").First().Attribute("fontSize").Value));
-            int splitYStart = Convert.ToInt32(gameXML.Descendants("splits").First().Attribute("yStart").Value);
-            int splitYGap = Convert.ToInt32(gameXML.Descendants("splits").First().Attribute("yGap").Value);
+            splitYStart = Convert.ToInt32(gameXML.Descendants("splits").First().Attribute("yStart").Value);
+            splitY2Start = (players < 4 ? 0 : Convert.ToInt32(gameXML.Descendants("splits").First().Attribute("yStart2").Value));
+            splitYGap = Convert.ToInt32(gameXML.Descendants("splits").First().Attribute("yGap").Value);
 
-            splitTexts = new Label[splits];
-            splitTimes = new Label[2, splits];
-            diffTimes = new Label[2, splits];
-            splitSpan = new TimeSpan[2, splits];
+            splitTexts = new Label[players / 2, splits];
+            splitTimes = new Label[players, splits];
+            diffTimes = new Label[players, splits];
+            splitSpan = new TimeSpan[players, splits];
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < players; i++)
                 for (int j = 0; j < splits; j++)
                 {
                     splitSpan[i, j] = new TimeSpan();
@@ -877,8 +788,8 @@ namespace DualSplit
                     splitTimes[i, j] = new Label();
                     diffTimes[i, j] = new Label();
 
-                    splitTimes[i, j].Left = (i == 0 ? timeALeft : timeBLeft);
-                    splitTimes[i, j].Top = splitYStart + (j * splitYGap);
+                    splitTimes[i, j].Left = (i == 0 || i == 2 ? timeALeft : timeBLeft);
+                    splitTimes[i, j].Top = (i == 0 || i == 1 ? splitYStart : splitY2Start) + (j * splitYGap);
                     splitTimes[i, j].ForeColor = Color.White;
                     splitTimes[i, j].Visible = true;
                     splitTimes[i, j].Text = "";
@@ -887,8 +798,8 @@ namespace DualSplit
 
                     Controls.Add(splitTimes[i, j]);
 
-                    diffTimes[i, j].Left = (i == 0 ? diffALeft : diffBLeft);
-                    diffTimes[i, j].Top = splitYStart + (j * splitYGap);
+                    diffTimes[i, j].Left = (i == 0 || i == 2 ? diffALeft : diffBLeft);
+                    diffTimes[i, j].Top = (i == 0 || i == 1 ? splitYStart : splitY2Start) + (j * splitYGap);
                     diffTimes[i, j].ForeColor = Color.White;
                     diffTimes[i, j].Visible = true;
                     diffTimes[i, j].Text = "";
@@ -897,16 +808,45 @@ namespace DualSplit
                     Controls.Add(diffTimes[i, j]);
                 }
 
+            for (int i = 0; i < players / 2; i++)
+                for (int j = 0; j < splits; j++)
+                {
+                    splitTexts[i, j] = new Label();
+                    splitTexts[i, j].Text = gameXML.Descendants("split").Skip(j).First().Attribute("name").Value;
+                    splitTexts[i, j].Left = titleLeft;
+                    splitTexts[i, j].Top = (i == 0 ? splitYStart : splitY2Start) + (j * splitYGap);
+                    splitTexts[i, j].AutoSize = true;
+                    splitTexts[i, j].Font = splitFont;
+                    splitTexts[i, j].ForeColor = Color.White;
+                    Controls.Add(splitTexts[i, j]);
+                }
+
+            limitSplits();
+        }
+
+        private void limitSplits()
+        {
+            // Figure out max of splits done between the two battles.
+            int maxSplits = Math.Max(splitsDone[0], splitsDone[1]); // Should be minus 1 because splits is zero-based, but we want to see at least one split into the future.
+            if (maxSplits >= splits) maxSplits = splits - 1; // Make sure we don't break the bounds of the array
+            int firstSplit = Math.Max(maxSplits - splitLimit + 1, 0); // Plus 1 here because we want to see one split into the future.
+            int lastSplit = Math.Max(splitLimit - 1, maxSplits);
             for (int i = 0; i < splits; i++)
             {
-                splitTexts[i] = new Label();
-                splitTexts[i].Text = gameXML.Descendants("split").Skip(i).First().Attribute("name").Value;
-                splitTexts[i].Left = titleLeft;
-                splitTexts[i].Top = splitYStart + (i * splitYGap);
-                splitTexts[i].AutoSize = true;
-                splitTexts[i].Font = splitFont;
-                splitTexts[i].ForeColor = Color.White;
-                Controls.Add(splitTexts[i]);
+                splitTimes[0, i].Visible = splitTimes[1, i].Visible = diffTimes[0, i].Visible = diffTimes[1, i].Visible = splitTexts[0, i].Visible = (i >= firstSplit && i <= lastSplit);
+                splitTimes[0, i].Top = splitTimes[1, i].Top = diffTimes[0, i].Top = diffTimes[1, i].Top = splitTexts[0, i].Top = splitYStart + ((i - firstSplit) * splitYGap);
+            }
+            if (players == 4)
+            {
+                maxSplits = Math.Max(splitsDone[2], splitsDone[3]); // Should be minus 1 because splits is zero-based, but we want to see at least one split into the future.
+                if (maxSplits >= splits) maxSplits = splits - 1; // Make sure we don't break the bounds of the array
+                firstSplit = Math.Max(maxSplits - splitLimit + 1, 0); // Plus 1 here because we want to see one split into the future.
+                lastSplit = Math.Max(splitLimit - 1, maxSplits);
+                for (int i = 0; i < splits; i++)
+                {
+                    splitTimes[2, i].Visible = splitTimes[3, i].Visible = diffTimes[2, i].Visible = diffTimes[3, i].Visible = splitTexts[1, i].Visible = (i >= firstSplit && i <= lastSplit);
+                    splitTimes[2, i].Top = splitTimes[3, i].Top = diffTimes[2, i].Top = diffTimes[3, i].Top = splitTexts[1, i].Top = splitY2Start + ((i - firstSplit) * splitYGap);
+                }
             }
         }
     }
