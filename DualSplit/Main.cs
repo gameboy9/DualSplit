@@ -209,7 +209,7 @@ namespace DualSplit
             timer1.Enabled = false;
             lblTimerA.Text = lblTimerB.Text = lblTimerC.Text = lblTimerD.Text = "0:00:00.0";
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < players; i++)
             {
                 for (int j = 0; j < splits; j++)
                 {
