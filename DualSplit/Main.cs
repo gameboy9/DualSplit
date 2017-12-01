@@ -18,6 +18,20 @@ namespace DualSplit
 {
     public partial class Main : Form
     {
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+        enum KeyModifier
+        {
+            None = 0,
+            Alt = 1,
+            Control = 2,
+            Shift = 4,
+            WinKey = 8
+        }
+
         Label[,] splitTimes;
         Label[,] diffTimes;
         Label[,] splitTexts;
@@ -50,6 +64,50 @@ namespace DualSplit
         public Main()
         {
             InitializeComponent();
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            if (m.Msg == 0x0312)
+            {
+                /* Note that the three lines below are not needed if you only want to register one hotkey.
+                 * The below lines are useful in case you want to register multiple keys, which you can use a switch with the id as argument, or if you want to know which key/modifier was pressed for some particular reason. */
+
+                Keys key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);                  // The key of the hotkey that was pressed.
+                KeyModifier modifier = (KeyModifier)((int)m.LParam & 0xFFFF);       // The modifier of the hotkey that was pressed.
+                int id = m.WParam.ToInt32();                                        // The id of the hotkey that was pressed.
+
+                if (id < 10)
+                {
+                    if (id < players)
+                    {
+                        if (client == true)
+                            sendBytes(new byte[] { (byte)(id + 3) });
+                        else
+                        {
+                            split(id);
+                            limitSplits();
+                            serverSendBytes(new byte[] { (byte)(id + 3) });
+                        }
+                    }
+                } else
+                {
+                    id -= 10;
+                    if (id < players)
+                    {
+                        if (client == true)
+                            sendBytes(new byte[] { (byte)(id + 7) });
+                        else
+                        {
+                            reverseSplit(id);
+                            limitSplits();
+                            serverSendBytes(new byte[] { (byte)(id + 7) });
+                        }
+                    }
+                }
+            }
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -228,7 +286,10 @@ namespace DualSplit
             if (client)
                 sendBytes(new byte[] { 0x01 });
             else
+            {
                 startClocks();
+                serverSendBytes(new byte[] { 0x01 });
+            }
         }
 
         private void adjustClocks(object sender, EventArgs e)
@@ -240,6 +301,7 @@ namespace DualSplit
             } else
             {
                 adjustTime(senderName.Contains("A") ? 0 : senderName.Contains("B") ? 1 : senderName.Contains("C") ? 2 : 3, senderName.Contains("m"));
+                serverSendBytes(new byte[] { (byte)((senderName.Contains("A") ? 0x50 : senderName.Contains("B") ? 0x52 : senderName.Contains("C") ? 0x54 : 0x56) + (senderName.Contains("m") ? 1 : 0)) });
             }
         }
 
@@ -257,6 +319,8 @@ namespace DualSplit
                     reverseSplit(senderName.Contains("A") ? 0 : senderName.Contains("B") ? 1 : senderName.Contains("C") ? 2 : 3);
 
                 limitSplits();
+
+                serverSendBytes(new byte[] { (byte)((senderName.Contains("A") ? 0 : senderName.Contains("B") ? 1 : senderName.Contains("C") ? 2 : 3) + (senderName.Contains("split") ? 3 : 7)) });
             }
         }
 
@@ -266,7 +330,10 @@ namespace DualSplit
                 if (client == true)
                     sendBytes(new byte[] { 0x02 });
                 else
+                {
                     resetClocks();
+                    serverSendBytes(new byte[] { 0x02 });
+                }
         }
 
         private void txtPlayerB_Leave(object sender, EventArgs e)
@@ -291,7 +358,10 @@ namespace DualSplit
             if (client == true)
                 sendBytes(new byte[] { (byte)((senderName.Contains("A") ? 0x10 : senderName.Contains("B") ? 0x20 : senderName.Contains("C") ? 0x30 : 0x40) + (senderName.Contains("p") ? 1 : 0) + (senderName.Contains("Ten") ? 2 : 0)) });
             else
+            {
                 adjustSplit(senderName.Contains("A") ? 0 : senderName.Contains("B") ? 1 : senderName.Contains("C") ? 2 : 3, senderName.Contains("P"), senderName.Contains("Ten"));
+                serverSendBytes(new byte[] { (byte)((senderName.Contains("A") ? 0x10 : senderName.Contains("B") ? 0x20 : senderName.Contains("C") ? 0x30 : 0x40) + (senderName.Contains("p") ? 1 : 0) + (senderName.Contains("Ten") ? 2 : 0)) });
+            }
         }
 
         private void cmdStartServer_Click(object sender, EventArgs e)
@@ -619,12 +689,31 @@ namespace DualSplit
             try
             {
                 // Convert to byte array and send.
-                //Byte[] byteDateLine = Encoding.ASCII.GetBytes("test message".ToCharArray());
                 m_sock.Send(bytesToSend, bytesToSend.Length, 0);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(this, ex.Message, "Send Message Failed!");
+            }
+        }
+
+        private void serverSendBytes(byte[] bytesToSend)
+        {
+            //Send the recieved data to all clients(including sender for echo)
+            foreach (SocketChatClient clientSend in m_aryClients)
+            {
+                try
+                {
+                    clientSend.Sock.Send(bytesToSend);
+                }
+                catch
+                {
+                    // If the send fails the close the connection
+                    Console.WriteLine("Send to client failed; closing client");
+                    clientSend.Sock.Close();
+                    m_aryClients.Remove(client);
+                    return;
+                }
             }
         }
 
@@ -636,6 +725,33 @@ namespace DualSplit
                 writer.WriteLine(txtPort.Text);
                 writer.WriteLine(gameFile);
             }
+
+            Unregister();
+        }
+
+        private void register()
+        {
+            RegisterHotKey(this.Handle, 0, (int)KeyModifier.Control, Keys.Q.GetHashCode());
+            RegisterHotKey(this.Handle, 1, (int)KeyModifier.Control, Keys.O.GetHashCode());
+            RegisterHotKey(this.Handle, 2, (int)KeyModifier.Control, Keys.A.GetHashCode());
+            RegisterHotKey(this.Handle, 3, (int)KeyModifier.Control, Keys.L.GetHashCode());
+
+            RegisterHotKey(this.Handle, 10, (int)KeyModifier.Alt, Keys.Q.GetHashCode());
+            RegisterHotKey(this.Handle, 11, (int)KeyModifier.Alt, Keys.O.GetHashCode());
+            RegisterHotKey(this.Handle, 12, (int)KeyModifier.Alt, Keys.A.GetHashCode());
+            RegisterHotKey(this.Handle, 13, (int)KeyModifier.Alt, Keys.L.GetHashCode());
+        }
+
+        private void Unregister()
+        {
+            UnregisterHotKey(this.Handle, 0);
+            UnregisterHotKey(this.Handle, 1);
+            UnregisterHotKey(this.Handle, 2);
+            UnregisterHotKey(this.Handle, 3);
+            UnregisterHotKey(this.Handle, 10);
+            UnregisterHotKey(this.Handle, 11);
+            UnregisterHotKey(this.Handle, 12);
+            UnregisterHotKey(this.Handle, 13);
         }
 
         private void cleanListBox()
@@ -848,6 +964,14 @@ namespace DualSplit
                     splitTimes[2, i].Top = splitTimes[3, i].Top = diffTimes[2, i].Top = diffTimes[3, i].Top = splitTexts[1, i].Top = splitY2Start + ((i - firstSplit) * splitYGap);
                 }
             }
+        }
+
+        private void chkGlobalHotkeys_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkGlobalHotkeys.Checked)
+                register();
+            else
+                Unregister();
         }
     }
 

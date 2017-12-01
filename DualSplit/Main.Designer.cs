@@ -88,6 +88,7 @@
             this.splitD = new System.Windows.Forms.Button();
             this.mOneD = new System.Windows.Forms.Button();
             this.pOneD = new System.Windows.Forms.Button();
+            this.chkGlobalHotkeys = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // timer1
@@ -725,12 +726,26 @@
             this.pOneD.UseVisualStyleBackColor = true;
             this.pOneD.Click += new System.EventHandler(this.adjustClocks);
             // 
+            // chkGlobalHotkeys
+            // 
+            this.chkGlobalHotkeys.AutoSize = true;
+            this.chkGlobalHotkeys.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkGlobalHotkeys.ForeColor = System.Drawing.Color.White;
+            this.chkGlobalHotkeys.Location = new System.Drawing.Point(121, 76);
+            this.chkGlobalHotkeys.Name = "chkGlobalHotkeys";
+            this.chkGlobalHotkeys.Size = new System.Drawing.Size(98, 17);
+            this.chkGlobalHotkeys.TabIndex = 114;
+            this.chkGlobalHotkeys.Text = "Global Hotkeys";
+            this.chkGlobalHotkeys.UseVisualStyleBackColor = true;
+            this.chkGlobalHotkeys.CheckedChanged += new System.EventHandler(this.chkGlobalHotkeys_CheckedChanged);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Navy;
             this.ClientSize = new System.Drawing.Size(1264, 682);
+            this.Controls.Add(this.chkGlobalHotkeys);
             this.Controls.Add(this.splitMTenD);
             this.Controls.Add(this.splitPTenD);
             this.Controls.Add(this.txtPlayerD);
@@ -863,6 +878,7 @@
         private System.Windows.Forms.Button splitD;
         private System.Windows.Forms.Button mOneD;
         private System.Windows.Forms.Button pOneD;
+        private System.Windows.Forms.CheckBox chkGlobalHotkeys;
     }
 }
 
