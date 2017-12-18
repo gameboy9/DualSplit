@@ -772,6 +772,8 @@ namespace DualSplit
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 gameFile = openFileDialog1.FileName;
+                // Mandatory reset clock
+                resetClocks();
                 loadGame();
             }
         }

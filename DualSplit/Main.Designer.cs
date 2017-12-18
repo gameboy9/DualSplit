@@ -365,44 +365,44 @@
             // reverseB
             // 
             this.reverseB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.reverseB.Location = new System.Drawing.Point(1059, 130);
+            this.reverseB.Location = new System.Drawing.Point(1039, 130);
             this.reverseB.Name = "reverseB";
-            this.reverseB.Size = new System.Drawing.Size(71, 23);
+            this.reverseB.Size = new System.Drawing.Size(99, 23);
             this.reverseB.TabIndex = 67;
-            this.reverseB.Text = "Reverse";
+            this.reverseB.Text = "Reverse (Alt+O)";
             this.reverseB.UseVisualStyleBackColor = true;
             this.reverseB.Click += new System.EventHandler(this.btnSplit);
             // 
             // reverseA
             // 
             this.reverseA.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.reverseA.Location = new System.Drawing.Point(139, 130);
+            this.reverseA.Location = new System.Drawing.Point(131, 130);
             this.reverseA.Name = "reverseA";
-            this.reverseA.Size = new System.Drawing.Size(71, 23);
+            this.reverseA.Size = new System.Drawing.Size(99, 23);
             this.reverseA.TabIndex = 66;
-            this.reverseA.Text = "Reverse";
+            this.reverseA.Text = "Reverse (Alt+Q)";
             this.reverseA.UseVisualStyleBackColor = true;
             this.reverseA.Click += new System.EventHandler(this.btnSplit);
             // 
             // splitB
             // 
             this.splitB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitB.Location = new System.Drawing.Point(1059, 101);
+            this.splitB.Location = new System.Drawing.Point(1039, 101);
             this.splitB.Name = "splitB";
-            this.splitB.Size = new System.Drawing.Size(71, 23);
+            this.splitB.Size = new System.Drawing.Size(99, 23);
             this.splitB.TabIndex = 65;
-            this.splitB.Text = "Split";
+            this.splitB.Text = "Split (Cntl+O)";
             this.splitB.UseVisualStyleBackColor = true;
             this.splitB.Click += new System.EventHandler(this.btnSplit);
             // 
             // splitA
             // 
             this.splitA.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitA.Location = new System.Drawing.Point(139, 101);
+            this.splitA.Location = new System.Drawing.Point(131, 101);
             this.splitA.Name = "splitA";
-            this.splitA.Size = new System.Drawing.Size(71, 23);
+            this.splitA.Size = new System.Drawing.Size(99, 23);
             this.splitA.TabIndex = 64;
-            this.splitA.Text = "Split";
+            this.splitA.Text = "Split (Cntl+Q)";
             this.splitA.UseVisualStyleBackColor = true;
             this.splitA.Click += new System.EventHandler(this.btnSplit);
             // 
@@ -588,22 +588,22 @@
             // reverseC
             // 
             this.reverseC.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.reverseC.Location = new System.Drawing.Point(139, 641);
+            this.reverseC.Location = new System.Drawing.Point(131, 641);
             this.reverseC.Name = "reverseC";
-            this.reverseC.Size = new System.Drawing.Size(71, 23);
+            this.reverseC.Size = new System.Drawing.Size(99, 23);
             this.reverseC.TabIndex = 99;
-            this.reverseC.Text = "Reverse";
+            this.reverseC.Text = "Reverse (Alt+A)";
             this.reverseC.UseVisualStyleBackColor = true;
             this.reverseC.Click += new System.EventHandler(this.btnSplit);
             // 
             // splitC
             // 
             this.splitC.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitC.Location = new System.Drawing.Point(139, 612);
+            this.splitC.Location = new System.Drawing.Point(131, 612);
             this.splitC.Name = "splitC";
-            this.splitC.Size = new System.Drawing.Size(71, 23);
+            this.splitC.Size = new System.Drawing.Size(99, 23);
             this.splitC.TabIndex = 98;
-            this.splitC.Text = "Split";
+            this.splitC.Text = "Split (Cntl+A)";
             this.splitC.UseVisualStyleBackColor = true;
             this.splitC.Click += new System.EventHandler(this.btnSplit);
             // 
@@ -685,22 +685,22 @@
             // reverseD
             // 
             this.reverseD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.reverseD.Location = new System.Drawing.Point(1064, 641);
+            this.reverseD.Location = new System.Drawing.Point(1044, 641);
             this.reverseD.Name = "reverseD";
-            this.reverseD.Size = new System.Drawing.Size(71, 23);
+            this.reverseD.Size = new System.Drawing.Size(99, 23);
             this.reverseD.TabIndex = 108;
-            this.reverseD.Text = "Reverse";
+            this.reverseD.Text = "Reverse (Alt+L)";
             this.reverseD.UseVisualStyleBackColor = true;
             this.reverseD.Click += new System.EventHandler(this.btnSplit);
             // 
             // splitD
             // 
             this.splitD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitD.Location = new System.Drawing.Point(1064, 612);
+            this.splitD.Location = new System.Drawing.Point(1044, 612);
             this.splitD.Name = "splitD";
-            this.splitD.Size = new System.Drawing.Size(71, 23);
+            this.splitD.Size = new System.Drawing.Size(99, 23);
             this.splitD.TabIndex = 107;
-            this.splitD.Text = "Split";
+            this.splitD.Text = "Split (Cntl+L)";
             this.splitD.UseVisualStyleBackColor = true;
             this.splitD.Click += new System.EventHandler(this.btnSplit);
             // 
