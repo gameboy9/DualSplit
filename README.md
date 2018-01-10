@@ -6,7 +6,9 @@ Restreamers can either control this by themselves or have a "tracker" connect to
 
 ## Setup
 
-To set this up for your own game, you will need to edit the XML provided in the ZIPs.  Here are the various elements and their attributes, in order:
+For restreamers, it is strongly recommended that you set up a Chroma Key of 0,0,128 to make the program transparent.
+
+To set up DualSplit for your own game, you will need to edit the XML provided in the ZIPs.  Here are the various elements and their attributes, in order:
 
 ### game Element
 - Name attribute - The game name
