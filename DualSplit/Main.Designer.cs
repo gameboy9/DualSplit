@@ -43,18 +43,18 @@
             this.cmdConnect = new System.Windows.Forms.Button();
             this.cmdStartServer = new System.Windows.Forms.Button();
             this.splitMTenA = new System.Windows.Forms.Button();
-            this.splitPTenA = new System.Windows.Forms.Button();
+            this.splitPlusTenA = new System.Windows.Forms.Button();
             this.splitMTenB = new System.Windows.Forms.Button();
-            this.splitPTenB = new System.Windows.Forms.Button();
+            this.splitPlusTenB = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtCommentary = new System.Windows.Forms.TextBox();
             this.txtPlayerA = new System.Windows.Forms.TextBox();
             this.txtPlayerB = new System.Windows.Forms.TextBox();
             this.btnResetClocks = new System.Windows.Forms.Button();
             this.splitMOneA = new System.Windows.Forms.Button();
-            this.splitPOneA = new System.Windows.Forms.Button();
+            this.splitPlusOneA = new System.Windows.Forms.Button();
             this.splitMOneB = new System.Windows.Forms.Button();
-            this.splitPOneB = new System.Windows.Forms.Button();
+            this.splitPlusOneB = new System.Windows.Forms.Button();
             this.reverseB = new System.Windows.Forms.Button();
             this.reverseA = new System.Windows.Forms.Button();
             this.splitB = new System.Windows.Forms.Button();
@@ -71,19 +71,19 @@
             this.lblPlayerC = new System.Windows.Forms.Label();
             this.lblPlayerD = new System.Windows.Forms.Label();
             this.splitMTenC = new System.Windows.Forms.Button();
-            this.splitPTenC = new System.Windows.Forms.Button();
+            this.splitPlusTenC = new System.Windows.Forms.Button();
             this.txtPlayerC = new System.Windows.Forms.TextBox();
             this.splitMOneC = new System.Windows.Forms.Button();
-            this.splitPOneC = new System.Windows.Forms.Button();
+            this.splitPlusOneC = new System.Windows.Forms.Button();
             this.reverseC = new System.Windows.Forms.Button();
             this.splitC = new System.Windows.Forms.Button();
             this.mOneC = new System.Windows.Forms.Button();
             this.pOneC = new System.Windows.Forms.Button();
             this.splitMTenD = new System.Windows.Forms.Button();
-            this.splitPTenD = new System.Windows.Forms.Button();
+            this.splitPlusTenD = new System.Windows.Forms.Button();
             this.txtPlayerD = new System.Windows.Forms.TextBox();
             this.splitMOneD = new System.Windows.Forms.Button();
-            this.splitPOneD = new System.Windows.Forms.Button();
+            this.splitPlusOneD = new System.Windows.Forms.Button();
             this.reverseD = new System.Windows.Forms.Button();
             this.splitD = new System.Windows.Forms.Button();
             this.mOneD = new System.Windows.Forms.Button();
@@ -237,16 +237,16 @@
             this.splitMTenA.UseVisualStyleBackColor = true;
             this.splitMTenA.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
-            // splitPTenA
+            // splitPlusTenA
             // 
-            this.splitPTenA.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitPTenA.Location = new System.Drawing.Point(20, 101);
-            this.splitPTenA.Name = "splitPTenA";
-            this.splitPTenA.Size = new System.Drawing.Size(47, 23);
-            this.splitPTenA.TabIndex = 79;
-            this.splitPTenA.Text = "+10 s";
-            this.splitPTenA.UseVisualStyleBackColor = true;
-            this.splitPTenA.Click += new System.EventHandler(this.btnSplitAdjust);
+            this.splitPlusTenA.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.splitPlusTenA.Location = new System.Drawing.Point(20, 101);
+            this.splitPlusTenA.Name = "splitPlusTenA";
+            this.splitPlusTenA.Size = new System.Drawing.Size(47, 23);
+            this.splitPlusTenA.TabIndex = 79;
+            this.splitPlusTenA.Text = "+10 s";
+            this.splitPlusTenA.UseVisualStyleBackColor = true;
+            this.splitPlusTenA.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
             // splitMTenB
             // 
@@ -259,16 +259,16 @@
             this.splitMTenB.UseVisualStyleBackColor = true;
             this.splitMTenB.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
-            // splitPTenB
+            // splitPlusTenB
             // 
-            this.splitPTenB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitPTenB.Location = new System.Drawing.Point(1147, 101);
-            this.splitPTenB.Name = "splitPTenB";
-            this.splitPTenB.Size = new System.Drawing.Size(47, 23);
-            this.splitPTenB.TabIndex = 77;
-            this.splitPTenB.Text = "+10 s";
-            this.splitPTenB.UseVisualStyleBackColor = true;
-            this.splitPTenB.Click += new System.EventHandler(this.btnSplitAdjust);
+            this.splitPlusTenB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.splitPlusTenB.Location = new System.Drawing.Point(1147, 101);
+            this.splitPlusTenB.Name = "splitPlusTenB";
+            this.splitPlusTenB.Size = new System.Drawing.Size(47, 23);
+            this.splitPlusTenB.TabIndex = 77;
+            this.splitPlusTenB.Text = "+10 s";
+            this.splitPlusTenB.UseVisualStyleBackColor = true;
+            this.splitPlusTenB.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
             // label1
             // 
@@ -329,16 +329,16 @@
             this.splitMOneA.UseVisualStyleBackColor = true;
             this.splitMOneA.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
-            // splitPOneA
+            // splitPlusOneA
             // 
-            this.splitPOneA.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitPOneA.Location = new System.Drawing.Point(20, 130);
-            this.splitPOneA.Name = "splitPOneA";
-            this.splitPOneA.Size = new System.Drawing.Size(47, 23);
-            this.splitPOneA.TabIndex = 70;
-            this.splitPOneA.Text = "+1 sec";
-            this.splitPOneA.UseVisualStyleBackColor = true;
-            this.splitPOneA.Click += new System.EventHandler(this.btnSplitAdjust);
+            this.splitPlusOneA.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.splitPlusOneA.Location = new System.Drawing.Point(20, 130);
+            this.splitPlusOneA.Name = "splitPlusOneA";
+            this.splitPlusOneA.Size = new System.Drawing.Size(47, 23);
+            this.splitPlusOneA.TabIndex = 70;
+            this.splitPlusOneA.Text = "+1 sec";
+            this.splitPlusOneA.UseVisualStyleBackColor = true;
+            this.splitPlusOneA.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
             // splitMOneB
             // 
@@ -351,16 +351,16 @@
             this.splitMOneB.UseVisualStyleBackColor = true;
             this.splitMOneB.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
-            // splitPOneB
+            // splitPlusOneB
             // 
-            this.splitPOneB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitPOneB.Location = new System.Drawing.Point(1147, 130);
-            this.splitPOneB.Name = "splitPOneB";
-            this.splitPOneB.Size = new System.Drawing.Size(47, 23);
-            this.splitPOneB.TabIndex = 68;
-            this.splitPOneB.Text = "+1 sec";
-            this.splitPOneB.UseVisualStyleBackColor = true;
-            this.splitPOneB.Click += new System.EventHandler(this.btnSplitAdjust);
+            this.splitPlusOneB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.splitPlusOneB.Location = new System.Drawing.Point(1147, 130);
+            this.splitPlusOneB.Name = "splitPlusOneB";
+            this.splitPlusOneB.Size = new System.Drawing.Size(47, 23);
+            this.splitPlusOneB.TabIndex = 68;
+            this.splitPlusOneB.Text = "+1 sec";
+            this.splitPlusOneB.UseVisualStyleBackColor = true;
+            this.splitPlusOneB.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
             // reverseB
             // 
@@ -543,16 +543,16 @@
             this.splitMTenC.UseVisualStyleBackColor = true;
             this.splitMTenC.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
-            // splitPTenC
+            // splitPlusTenC
             // 
-            this.splitPTenC.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitPTenC.Location = new System.Drawing.Point(20, 612);
-            this.splitPTenC.Name = "splitPTenC";
-            this.splitPTenC.Size = new System.Drawing.Size(47, 23);
-            this.splitPTenC.TabIndex = 103;
-            this.splitPTenC.Text = "+10 s";
-            this.splitPTenC.UseVisualStyleBackColor = true;
-            this.splitPTenC.Click += new System.EventHandler(this.btnSplitAdjust);
+            this.splitPlusTenC.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.splitPlusTenC.Location = new System.Drawing.Point(20, 612);
+            this.splitPlusTenC.Name = "splitPlusTenC";
+            this.splitPlusTenC.Size = new System.Drawing.Size(47, 23);
+            this.splitPlusTenC.TabIndex = 103;
+            this.splitPlusTenC.Text = "+10 s";
+            this.splitPlusTenC.UseVisualStyleBackColor = true;
+            this.splitPlusTenC.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
             // txtPlayerC
             // 
@@ -574,16 +574,16 @@
             this.splitMOneC.UseVisualStyleBackColor = true;
             this.splitMOneC.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
-            // splitPOneC
+            // splitPlusOneC
             // 
-            this.splitPOneC.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitPOneC.Location = new System.Drawing.Point(20, 641);
-            this.splitPOneC.Name = "splitPOneC";
-            this.splitPOneC.Size = new System.Drawing.Size(47, 23);
-            this.splitPOneC.TabIndex = 100;
-            this.splitPOneC.Text = "+1 sec";
-            this.splitPOneC.UseVisualStyleBackColor = true;
-            this.splitPOneC.Click += new System.EventHandler(this.btnSplitAdjust);
+            this.splitPlusOneC.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.splitPlusOneC.Location = new System.Drawing.Point(20, 641);
+            this.splitPlusOneC.Name = "splitPlusOneC";
+            this.splitPlusOneC.Size = new System.Drawing.Size(47, 23);
+            this.splitPlusOneC.TabIndex = 100;
+            this.splitPlusOneC.Text = "+1 sec";
+            this.splitPlusOneC.UseVisualStyleBackColor = true;
+            this.splitPlusOneC.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
             // reverseC
             // 
@@ -640,16 +640,16 @@
             this.splitMTenD.UseVisualStyleBackColor = true;
             this.splitMTenD.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
-            // splitPTenD
+            // splitPlusTenD
             // 
-            this.splitPTenD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitPTenD.Location = new System.Drawing.Point(1152, 612);
-            this.splitPTenD.Name = "splitPTenD";
-            this.splitPTenD.Size = new System.Drawing.Size(47, 23);
-            this.splitPTenD.TabIndex = 112;
-            this.splitPTenD.Text = "+10 s";
-            this.splitPTenD.UseVisualStyleBackColor = true;
-            this.splitPTenD.Click += new System.EventHandler(this.btnSplitAdjust);
+            this.splitPlusTenD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.splitPlusTenD.Location = new System.Drawing.Point(1152, 612);
+            this.splitPlusTenD.Name = "splitPlusTenD";
+            this.splitPlusTenD.Size = new System.Drawing.Size(47, 23);
+            this.splitPlusTenD.TabIndex = 112;
+            this.splitPlusTenD.Text = "+10 s";
+            this.splitPlusTenD.UseVisualStyleBackColor = true;
+            this.splitPlusTenD.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
             // txtPlayerD
             // 
@@ -671,16 +671,16 @@
             this.splitMOneD.UseVisualStyleBackColor = true;
             this.splitMOneD.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
-            // splitPOneD
+            // splitPlusOneD
             // 
-            this.splitPOneD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitPOneD.Location = new System.Drawing.Point(1152, 641);
-            this.splitPOneD.Name = "splitPOneD";
-            this.splitPOneD.Size = new System.Drawing.Size(47, 23);
-            this.splitPOneD.TabIndex = 109;
-            this.splitPOneD.Text = "+1 sec";
-            this.splitPOneD.UseVisualStyleBackColor = true;
-            this.splitPOneD.Click += new System.EventHandler(this.btnSplitAdjust);
+            this.splitPlusOneD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.splitPlusOneD.Location = new System.Drawing.Point(1152, 641);
+            this.splitPlusOneD.Name = "splitPlusOneD";
+            this.splitPlusOneD.Size = new System.Drawing.Size(47, 23);
+            this.splitPlusOneD.TabIndex = 109;
+            this.splitPlusOneD.Text = "+1 sec";
+            this.splitPlusOneD.UseVisualStyleBackColor = true;
+            this.splitPlusOneD.Click += new System.EventHandler(this.btnSplitAdjust);
             // 
             // reverseD
             // 
@@ -747,19 +747,19 @@
             this.ClientSize = new System.Drawing.Size(1264, 682);
             this.Controls.Add(this.chkGlobalHotkeys);
             this.Controls.Add(this.splitMTenD);
-            this.Controls.Add(this.splitPTenD);
+            this.Controls.Add(this.splitPlusTenD);
             this.Controls.Add(this.txtPlayerD);
             this.Controls.Add(this.splitMOneD);
-            this.Controls.Add(this.splitPOneD);
+            this.Controls.Add(this.splitPlusOneD);
             this.Controls.Add(this.reverseD);
             this.Controls.Add(this.splitD);
             this.Controls.Add(this.mOneD);
             this.Controls.Add(this.pOneD);
             this.Controls.Add(this.splitMTenC);
-            this.Controls.Add(this.splitPTenC);
+            this.Controls.Add(this.splitPlusTenC);
             this.Controls.Add(this.txtPlayerC);
             this.Controls.Add(this.splitMOneC);
-            this.Controls.Add(this.splitPOneC);
+            this.Controls.Add(this.splitPlusOneC);
             this.Controls.Add(this.reverseC);
             this.Controls.Add(this.splitC);
             this.Controls.Add(this.mOneC);
@@ -779,18 +779,18 @@
             this.Controls.Add(this.cmdConnect);
             this.Controls.Add(this.cmdStartServer);
             this.Controls.Add(this.splitMTenA);
-            this.Controls.Add(this.splitPTenA);
+            this.Controls.Add(this.splitPlusTenA);
             this.Controls.Add(this.splitMTenB);
-            this.Controls.Add(this.splitPTenB);
+            this.Controls.Add(this.splitPlusTenB);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtCommentary);
             this.Controls.Add(this.txtPlayerA);
             this.Controls.Add(this.txtPlayerB);
             this.Controls.Add(this.btnResetClocks);
             this.Controls.Add(this.splitMOneA);
-            this.Controls.Add(this.splitPOneA);
+            this.Controls.Add(this.splitPlusOneA);
             this.Controls.Add(this.splitMOneB);
-            this.Controls.Add(this.splitPOneB);
+            this.Controls.Add(this.splitPlusOneB);
             this.Controls.Add(this.reverseB);
             this.Controls.Add(this.reverseA);
             this.Controls.Add(this.splitB);
@@ -833,18 +833,18 @@
         private System.Windows.Forms.Button cmdConnect;
         private System.Windows.Forms.Button cmdStartServer;
         private System.Windows.Forms.Button splitMTenA;
-        private System.Windows.Forms.Button splitPTenA;
+        private System.Windows.Forms.Button splitPlusTenA;
         private System.Windows.Forms.Button splitMTenB;
-        private System.Windows.Forms.Button splitPTenB;
+        private System.Windows.Forms.Button splitPlusTenB;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtCommentary;
         private System.Windows.Forms.TextBox txtPlayerA;
         private System.Windows.Forms.TextBox txtPlayerB;
         private System.Windows.Forms.Button btnResetClocks;
         private System.Windows.Forms.Button splitMOneA;
-        private System.Windows.Forms.Button splitPOneA;
+        private System.Windows.Forms.Button splitPlusOneA;
         private System.Windows.Forms.Button splitMOneB;
-        private System.Windows.Forms.Button splitPOneB;
+        private System.Windows.Forms.Button splitPlusOneB;
         private System.Windows.Forms.Button reverseB;
         private System.Windows.Forms.Button reverseA;
         private System.Windows.Forms.Button splitB;
@@ -861,19 +861,19 @@
         public System.Windows.Forms.Label lblPlayerC;
         public System.Windows.Forms.Label lblPlayerD;
         private System.Windows.Forms.Button splitMTenC;
-        private System.Windows.Forms.Button splitPTenC;
+        private System.Windows.Forms.Button splitPlusTenC;
         private System.Windows.Forms.TextBox txtPlayerC;
         private System.Windows.Forms.Button splitMOneC;
-        private System.Windows.Forms.Button splitPOneC;
+        private System.Windows.Forms.Button splitPlusOneC;
         private System.Windows.Forms.Button reverseC;
         private System.Windows.Forms.Button splitC;
         private System.Windows.Forms.Button mOneC;
         private System.Windows.Forms.Button pOneC;
         private System.Windows.Forms.Button splitMTenD;
-        private System.Windows.Forms.Button splitPTenD;
+        private System.Windows.Forms.Button splitPlusTenD;
         private System.Windows.Forms.TextBox txtPlayerD;
         private System.Windows.Forms.Button splitMOneD;
-        private System.Windows.Forms.Button splitPOneD;
+        private System.Windows.Forms.Button splitPlusOneD;
         private System.Windows.Forms.Button reverseD;
         private System.Windows.Forms.Button splitD;
         private System.Windows.Forms.Button mOneD;

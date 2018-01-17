@@ -356,11 +356,11 @@ namespace DualSplit
             string senderName = ((Button)sender).Name;
 
             if (client == true)
-                sendBytes(new byte[] { (byte)((senderName.Contains("A") ? 0x10 : senderName.Contains("B") ? 0x20 : senderName.Contains("C") ? 0x30 : 0x40) + (senderName.Contains("p") ? 1 : 0) + (senderName.Contains("Ten") ? 2 : 0)) });
+                sendBytes(new byte[] { (byte)((senderName.Contains("A") ? 0x10 : senderName.Contains("B") ? 0x20 : senderName.Contains("C") ? 0x30 : 0x40) + (senderName.Contains("Plus") ? 1 : 0) + (senderName.Contains("Ten") ? 2 : 0)) });
             else
             {
                 adjustSplit(senderName.Contains("A") ? 0 : senderName.Contains("B") ? 1 : senderName.Contains("C") ? 2 : 3, senderName.Contains("P"), senderName.Contains("Ten"));
-                serverSendBytes(new byte[] { (byte)((senderName.Contains("A") ? 0x10 : senderName.Contains("B") ? 0x20 : senderName.Contains("C") ? 0x30 : 0x40) + (senderName.Contains("p") ? 1 : 0) + (senderName.Contains("Ten") ? 2 : 0)) });
+                serverSendBytes(new byte[] { (byte)((senderName.Contains("A") ? 0x10 : senderName.Contains("B") ? 0x20 : senderName.Contains("C") ? 0x30 : 0x40) + (senderName.Contains("Plus") ? 1 : 0) + (senderName.Contains("Ten") ? 2 : 0)) });
             }
         }
 
@@ -811,12 +811,12 @@ namespace DualSplit
             reverseD.Visible = (players == 4);
             splitMOneC.Visible = (players == 4);
             splitMOneD.Visible = (players == 4);
-            splitPOneC.Visible = (players == 4);
-            splitPOneD.Visible = (players == 4);
+            splitPlusOneC.Visible = (players == 4);
+            splitPlusOneD.Visible = (players == 4);
             splitMTenC.Visible = (players == 4);
             splitMTenD.Visible = (players == 4);
-            splitPTenC.Visible = (players == 4);
-            splitPTenD.Visible = (players == 4);
+            splitPlusTenC.Visible = (players == 4);
+            splitPlusTenD.Visible = (players == 4);
             lblTimerC.Visible = (players == 4);
             lblTimerD.Visible = (players == 4);
 
